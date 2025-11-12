@@ -1,0 +1,45 @@
+{
+  "transactions": [
+    {
+      "type": "expense",
+      "category": "Food",
+      "amount": 20,
+      "description": "Avocado Toast",
+      "date": "2025-11-12",
+      "id": "1762932844803-19ctne0nj",
+      "createdAt": "2025-11-12T07:34:04.803Z",
+      "updatedAt": "2025-11-12T07:34:04.803Z"
+    },
+    {
+      "type": "income",
+      "category": "Salary",
+      "amount": 1000,
+      "description": "November 11th",
+      "date": "2025-11-11",
+      "id": "1762932914522-h9r9xz8nf",
+      "createdAt": "2025-11-12T07:35:14.522Z",
+      "updatedAt": "2025-11-12T07:35:14.522Z"
+    },
+    {
+      "type": "expense",
+      "category": "Housing",
+      "amount": 500,
+      "description": "Mortgage",
+      "date": "2025-11-12",
+      "id": "1762932986684-wyy1bjtf1",
+      "createdAt": "2025-11-12T07:36:26.684Z",
+      "updatedAt": "2025-11-12T07:36:43.664Z"
+    }
+  ],
+  "budgets": [
+    {
+      "category": "Housing",
+      "monthlyLimit": 1000,
+      "month": "2025-11",
+      "id": "",
+      "createdAt": "",
+      "updatedAt": "2025-11-12T07:37:30.700Z"
+    }
+  ],
+  "exportDate": "2025-11-12T07:38:00.690Z"
+}
