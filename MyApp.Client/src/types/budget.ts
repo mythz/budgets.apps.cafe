@@ -7,6 +7,7 @@ export interface Transaction {
   amount: number
   description: string
   date: string // ISO date string
+  tags?: string[] // Optional tags for transactions
   createdAt: string
   updatedAt: string
 }

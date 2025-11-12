@@ -22,3 +22,20 @@ Budgets
 Reports
 - View past months
 - Export
+
+## New Features
+
+### Category Auto Tagging
+
+Implement Category Auto-Tagging
+
+Allow specifying tags when creating a new transaction.
+When users add a transaction, try to predict the tag from the Description, e.g:
+
+Input: “Starbucks latte” → Suggests category: Food & Drinks
+Input: “Uber to work” → Suggests category: Transport
+
+Implementation:
+
+Maintain a small local list of common keywords + categories.
+Pre-fill category in the transaction form as the user types in the Description.

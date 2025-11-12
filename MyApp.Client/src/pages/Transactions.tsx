@@ -6,6 +6,7 @@ import {
   deleteTransaction,
 } from '../lib/storage'
 import { formatCurrency, formatDate, sortTransactions, generateId } from '../lib/utils'
+import { suggestCategory } from '../lib/categoryAutoTag'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../types/budget'
 import type { Transaction, TransactionType } from '../types/budget'
 
@@ -312,9 +313,25 @@ function TransactionModal({ transaction, onSave, onClose }: TransactionModalProp
     amount: transaction?.amount || 0,
     description: transaction?.description || '',
     date: transaction?.date || new Date().toISOString().split('T')[0],
+    tags: transaction?.tags || [] as string[],
   })
+  const [suggestedCategory, setSuggestedCategory] = useState<string | null>(null)
+  const [tagInput, setTagInput] = useState('')
 
   const categories = formData.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES
+
+  // Auto-suggest category based on description
+  useEffect(() => {
+    if (formData.description && !transaction) {
+      const suggested = suggestCategory(formData.description, formData.type)
+      setSuggestedCategory(suggested)
+
+      // Auto-fill category if it's empty and we have a suggestion
+      if (!formData.category && suggested) {
+        setFormData(prev => ({ ...prev, category: suggested }))
+      }
+    }
+  }, [formData.description, formData.type, transaction])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -323,6 +340,20 @@ function TransactionModal({ transaction, onSave, onClose }: TransactionModalProp
       return
     }
     onSave(formData)
+  }
+
+  function handleAddTag(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter' && tagInput.trim()) {
+      e.preventDefault()
+      if (!formData.tags.includes(tagInput.trim())) {
+        setFormData({ ...formData, tags: [...formData.tags, tagInput.trim()] })
+      }
+      setTagInput('')
+    }
+  }
+
+  function handleRemoveTag(tagToRemove: string) {
+    setFormData({ ...formData, tags: formData.tags.filter(tag => tag !== tagToRemove) })
   }
 
   return (
@@ -388,8 +419,46 @@ function TransactionModal({ transaction, onSave, onClose }: TransactionModalProp
                 type="text"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="e.g., Starbucks latte, Uber to work"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
               />
+              {suggestedCategory && !transaction && (
+                <p className="mt-1 text-sm text-indigo-600 dark:text-indigo-400">
+                  💡 Suggested category: {suggestedCategory}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Tags
+              </label>
+              <input
+                type="text"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleAddTag}
+                placeholder="Press Enter to add tags"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+              />
+              {formData.tags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {formData.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
+                    >
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveTag(tag)}
+                        className="ml-1.5 inline-flex items-center justify-center text-indigo-600 hover:text-indigo-800 dark:text-indigo-300 dark:hover:text-indigo-100"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
