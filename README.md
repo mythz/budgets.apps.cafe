@@ -1,48 +1,19 @@
-# Budget Planner App
+# react-vite
 
-A modern budget planning application built with React 19, TypeScript, TailwindCSS v4, and IndexedDB for data persistence.
+React + Vite + TypeScript + Tailwind CSS project template
 
 ## Tech Stack
 
 - **React 19** - A JavaScript library for building user interfaces
 - **Vite** - Next Generation Frontend Tooling
 - **TypeScript** - JavaScript with syntax for types
-- **Tailwind CSS v4** - A utility-first CSS framework
-- **Recharts** - Composable charting library for React
-- **IndexedDB** - Browser-based database via idb library
-- **Vitest** - Fast unit testing framework
-- **React Testing Library** - Testing utilities for React
-
-## Features
-
-### Dashboard
-- Overview cards showing total income, expenses, and remaining budget for the current month
-- Monthly summary line chart showing income, expenses, and net amount for the last 6 months
-- Expense categories pie chart visualizing spending distribution
-
-### Transactions
-- Add, edit, and delete income or expense transactions
-- Filter transactions by type (income/expense) with search functionality
-- Sort transactions by date, amount, or category
-- View transaction history with color-coded type indicators
-
-### Budgets
-- Set monthly budget goals per expense category
-- Visual progress bars showing spending vs. budget
-- Color-coded indicators (green, yellow, red) based on spending percentage
-- View budget status for any month
-
-### Reports
-- View financial summaries for past months (3, 6, 12, or 24 months)
-- Monthly breakdown table with income, expenses, net amount, and savings rate
-- Export data as JSON (full database backup) or CSV (transactions only)
+- **Tailwind CSS** - A utility-first CSS framework
 
 ## Getting Started
 
 ### Install dependencies
 
 ```bash
-cd MyApp.Client
 npm install
 ```
 
@@ -54,7 +25,7 @@ Start the development server with hot module replacement:
 npm run dev
 ```
 
-The application will be available at `https://localhost:5173/`
+The application will be available at `http://localhost:5173/`
 
 ### Build
 
@@ -72,20 +43,6 @@ Preview the production build locally:
 npm run preview
 ```
 
-### Test
-
-Run tests with Vitest:
-
-```bash
-npm test
-```
-
-Run tests with UI:
-
-```bash
-npm run test:ui
-```
-
 ### Lint
 
 Run ESLint to check code quality:
@@ -99,51 +56,114 @@ npm run lint
 ```
 MyApp.Client/
 ├── src/
-│   ├── components/        # Reusable React components
-│   │   └── Layout.tsx     # Main layout with navigation
-│   ├── pages/             # Page components
-│   │   ├── Dashboard.tsx  # Dashboard with charts
-│   │   ├── Transactions.tsx # Transaction management
-│   │   ├── Budgets.tsx    # Budget planning
-│   │   └── Reports.tsx    # Reports and exports
-│   ├── lib/               # Utilities and data access
-│   │   ├── storage.ts     # IndexedDB operations
-│   │   ├── utils.ts       # Helper functions
-│   │   └── seedData.ts    # Sample data for demo
-│   ├── types/             # TypeScript type definitions
-│   │   └── budget.ts      # Budget app types
-│   ├── test/              # Test configuration
-│   │   └── setup.ts       # Test setup file
-│   ├── App.tsx            # Main App component with routing
-│   ├── index.css          # Global styles with Tailwind directives
-│   └── main.tsx           # Application entry point
-├── public/                # Public static files
-├── index.html             # HTML template
-├── tailwind.config.ts     # Tailwind CSS configuration
-├── vitest.config.ts       # Vitest configuration
-├── tsconfig.json          # TypeScript configuration
-└── vite.config.ts         # Vite configuration
+│   ├── assets/        # Static assets
+│   ├── App.tsx        # Main App component
+│   ├── App.css        # App styles
+│   ├── index.css      # Global styles with Tailwind CSS
+│   └── main.tsx       # Application entry point
+├── public/            # Public static files
+├── index.html         # HTML template
+├── tailwind.config.ts # Tailwind CSS configuration (TypeScript)
+├── postcss.config.js  # PostCSS configuration
+├── tsconfig.json      # TypeScript configuration
+└── vite.config.ts     # Vite configuration
 ```
 
-## Data Persistence
+## Tailwind CSS v4
 
-The app uses IndexedDB for client-side data persistence. All data is stored locally in your browser:
-- **Transactions**: Income and expense records
-- **Budgets**: Monthly budget goals per category
+This project uses **Tailwind CSS v4** with the new CSS-first configuration approach.
 
-### Sample Data
+### Key Features
 
-Click the "Load Sample Data" button on the Dashboard (when empty) to populate the app with sample transactions and budgets for demonstration purposes.
+- **Vite Plugin**: Uses `@tailwindcss/vite` for optimal performance
+- **CSS-first Configuration**: Modern `@import` syntax instead of legacy directives
+- **TypeScript Config**: Configuration in `tailwind.config.ts`
+- **Built-in Plugins**: Includes `@tailwindcss/forms` plugin
 
-## Tailwind CSS
+### Configuration
 
-This project uses Tailwind CSS v4 for styling. The configuration is located in `tailwind.config.ts`. 
+Tailwind is imported using the new v4 syntax in `src/index.css`:
 
-Tailwind directives are imported in `src/index.css`:
 ```css
 @import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@config "../tailwind.config.ts";
 ```
 
-## Dark Mode
+The Vite plugin is configured in `vite.config.ts`:
 
-The app includes a dark mode toggle in the navigation bar. Dark mode preferences are persisted across sessions.
+```ts
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+})
+```
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
